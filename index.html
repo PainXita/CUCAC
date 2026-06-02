@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mora Advanced Tool Suite (Obf & Deobf VM)</title>
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --container-bg: #1f2833;
+            --primary-color: #66fcf1;
+            --secondary-color: #45f3ff;
+            --text-color: #c5c6c7;
+            --btn-danger: #ff4a4a;
+            --btn-deobf: #a275ff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Nút Ba Gạch Thần Thánh */
+        .menu-burger {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: rgba(31, 40, 51, 0.9);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(102, 252, 241, 0.4);
+            box-shadow: 0 0 10px rgba(102, 252, 241, 0.2);
+        }
+
+        .menu-burger div {
+            width: 30px;
+            height: 3px;
+            background-color: var(--primary-color);
+            transition: 0.3s;
+        }
+
+        /* Menu điều hướng Side-Tab */
+        .nav-menu {
+            position: absolute;
+            top: 80px;
+            left: -260px;
+            width: 210px;
+            background: var(--container-bg);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .nav-menu.active {
+            left: 20px;
+        }
+
+        .menu-item {
+            padding: 14px;
+            background: #0f1319;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            color: var(--text-color);
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            color: #000;
+            background: var(--primary-color);
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 12px rgba(102, 252, 241, 0.3);
+        }
+
+        /* Khung giao diện chính */
+        .container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 26px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(102, 252, 241, 0.3);
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            background-color: #0f1319;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #00ffcc;
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 8px rgba(69, 243, 255, 0.3);
+        }
+
+        .file-upload-wrapper {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-upload {
+            display: inline-block;
+            padding: 8px 16px;
+            cursor: pointer;
+            background-color: #2c3e50;
+            border: 1px solid #34495e;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #34495e;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-obf {
+            background-color: var(--primary-color);
+            color: #000;
+            flex: 2;
+        }
+
+        .btn-obf:hover {
+            background-color: #45e0d7;
+            box-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
+        }
+
+        .btn-deobf-run {
+            background-color: var(--btn-deobf);
+            color: #fff;
+            flex: 2;
+        }
+
+        .btn-deobf-run:hover {
+            background-color: #b38aff;
+            box-shadow: 0 0 15px rgba(162, 117, 255, 0.4);
+        }
+
+        .btn-clear {
+            background-color: var(--btn-danger);
+            color: #fff;
+        }
+
+        .btn-clear:hover {
+            background-color: #ff3333;
+            box-shadow: 0 0 15px rgba(255, 74, 74, 0.4);
+        }
+
+        .btn-action {
+            background-color: #2d3748;
+            color: #fff;
+            border: 1px solid #4a5568;
+        }
+
+        .btn-action:hover {
+            background-color: #4a5568;
+        }
+
+        .output-box {
+            background-color: #0f1319;
+            border: 1px solid #334155;
+            color: #ffcc00;
+        }
+    </style>
+</head>
+<body>
+
+<div class="menu-burger" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+
+<div class="nav-menu" id="navMenu">
+    <div class="menu-item active" id="menuObf" onclick="switchTab('obf')">🔒 OBFUSCATOR</div>
+    <div class="menu-item" id="menuDeobf" onclick="switchTab('deobf')">🔓 DEOBFUSCATE DUMP</div>
+</div>
+
+<div class="container">
+    <h1 id="mainTitle">Mora Anti-Dump 5.1 VM Obfuscator</h1>
+    
+    <div class="section">
+        <label id="lblInput" for="inputScript">Nhập Script Lua gốc của bạn:</label>
+        <textarea id="inputScript" placeholder="Dán mã nguồn vào đây hoặc tải file từ máy tính..."></textarea>
+        
+        <div class="file-upload-wrapper">
+            <label class="custom-file-upload">
+                <input type="file" id="fileInput" accept=".lua,.txt">
+                📁 Tải file hệ thống
+            </label>
+            <span id="fileNameDisplay" style="font-size: 14px; color: #aaa;"></span>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-obf" id="btnMainProcess" onclick="processLogic()">⚡ TIẾN HÀNH OBFUSCATE (GOD MODE)</button>
+        <button class="btn-clear" onclick="clearAllCode()">🗑️ CLEAR CODE CŨ</button>
+    </div>
+
+    <div class="section">
+        <label id="lblOutput" for="outputScript">Kết quả mã hóa (Anti-Pattern Matching & Anti-Dump):</label>
+        <textarea id="outputScript" class="output-box" readonly placeholder="Kết quả xử lý logic thuật toán sẽ hiển thị ở đây..."></textarea>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-action" onclick="copyToClipboard()">📋 Sao chép Code</button>
+        <button class="btn-action" onclick="downloadFile()">💾 Tải File Xuống</button>
+    </div>
+</div>
+
+<script>
+    let currentMode = "obf";
+
+    // Mở hoặc đóng Menu Ba Gạch
+    function toggleMenu() {
+        document.getElementById('navMenu').classList.toggle('active');
+    }
+
+    // Chuyển đổi tab làm việc mượt mà
+    function switchTab(mode) {
+        currentMode = mode;
+        toggleMenu();
+        
+        const menuObf = document.getElementById('menuObf');
+        const menuDeobf = document.getElementById('menuDeobf');
+        const mainTitle = document.getElementById('mainTitle');
+        const btnMainProcess = document.getElementById('btnMainProcess');
+        const lblInput = document.getElementById('lblInput');
+        const lblOutput = document.getElementById('lblOutput');
+
+        menuObf.classList.remove('active');
+        menuDeobf.classList.remove('active');
+
+        if (mode === 'obf') {
+            menuObf.classList.add('active');
+            mainTitle.innerText = "Mora Anti-Dump 5.1 VM Obfuscator";
+            lblInput.innerText = "Nhập Script Lua gốc của bạn:";
+            lblOutput.innerText = "Kết quả mã hóa (Anti-Pattern Matching & Anti-Dump):";
+            btnMainProcess.innerText = "⚡ TIẾN HÀNH OBFUSCATE (GOD MODE)";
+            btnMainProcess.className = "btn-obf";
+        } else {
+            menuDeobf.classList.add('active');
+            mainTitle.innerText = "Mora Decompiler & Deobf Dump";
+            lblInput.innerText = "Nhập Code Dump cần giải mã:";
+            lblOutput.innerText = "Mã nguồn sau khi dọn rác và khôi phục cấu trúc các Method:";
+            btnMainProcess.innerText = "🔓 GIẢI MÃ DEOBF DUMP METHODS";
+            btnMainProcess.className = "btn-deobf-run";
+        }
+    }
+
+    // Đọc tệp tin cục bộ
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        document.getElementById('fileNameDisplay').innerText = file.name;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            document.getElementById('inputScript').value = evt.target.result;
+        };
+        reader.readAsText(file);
+    });
+
+    // Reset sạch dữ liệu (Nút Clear Code)
+    function clearAllCode() {
+        document.getElementById('inputScript').value = "";
+        document.getElementById('outputScript').value = "";
+        document.getElementById('fileInput').value = "";
+        document.getElementById('fileNameDisplay').innerText = "";
+        alert('Đã dọn sạch toàn bộ dữ liệu trên trình duyệt!');
+    }
+
+    // Biên dịch chuỗi ký tự sang chuỗi Byte thoát hệ 10
+    function toByteString(str) {
+        let res = "";
+        for (let i = 0; i < str.length; i++) {
+            res += "\\" + str.charCodeAt(i).toString().padStart(3, '0');
+        }
+        return res;
+    }
+
+    // GỘP CHUNG BỘ XỬ LÝ TRUNG TÂM
+    function processLogic() {
+        const sourceCode = document.getElementById('inputScript').value.trim();
+        if (!sourceCode) {
+            alert('Vui lòng nhập mã nguồn trước khi xử lý!');
+            return;
+        }
+
+        if (currentMode === "obf") {
+            // --- PHÂN HỆ 1: OBFUSCATOR CHỐNG DUMP VÀ PHÁ REGEX ---
+            const encodedData = toByteString(sourceCode);
+            const obfuscatedResult = `--[[ This file was created by Mora ]]\nreturn(function(...)local _0xG=(function()return getfenv or function()return _G end end)();local _0xCall=(function()return function(f,...)return f(...)end end)();local _0xJunk=(function()return"@#$\\^$198Akhsbk\\035\\001\\198\\232\\000\\102\\035"end);local _0xData=(function()return"${encodedData}"end)();local l_I1={};local l_I2=(function()return string.byte end)();local l_idx=(0x25-0x24);while true do if l_idx>#_0xCall(_0xCall,function()return _0xData end)then break end;local b=_0xCall(l_I2,_0xCall(_0xCall,function()return _0xData end),l_idx);l_I1[#l_I1+(0x7D-0x7C)]=string.char(b);l_idx=l_idx+(0xFE-0xFD)end;local _final=(function()return table.concat(l_I1)end)();local _0xExec=(function()return loadstring or load end)();if _0xG() then local _env=_0xG();if _env.print then _env.print=nil end end;_0xCall(_0xExec(_final))()end)(...)`;
+            document.getElementById('outputScript').value = obfuscatedResult;
+        } else {
+            // --- PHÂN HỆ 2: DEOBFUSCATOR DUMP SỬ DỤNG REGEX ĐẢO NGƯỢC ---
+            let deobfResult = sourceCode;
+
+            // Áp dụng Regex 1: Quét cấu trúc kết nối mảng xáo trộn biến để gom về dạng phương thức _25ms(...)
+            // Định dạng regex JS khớp với chuỗi tương đương Lua của bạn
+            const regexMethod1 = /([a-zA-Z_][a-zA-Z0-9_]*\[[a-zA-Z_][a-zA-Z0-9_]*\[[^\]]+\]\]\s*\.\.\s*[a-zA-Z_][a-zA-Z0-9_]*\[[a-zA-Z_][a-zA-Z0-9_]*\[[^\]]+\]\])/g;
+            deobfResult = deobfResult.replace(regexMethod1, "_25ms($1)");
+
+            // Áp dụng Regex 2: Bóc tách, định dạng lại các cụm cấu trúc 'local function' hoặc hàm gán lồng nhau
+            const regexMethod2_Part1 = /(local\s+function\s+[a-zA-Z0-9_]+\s*\([^,]+,\s*[^)]+\)[\s\S]*?\]\s*\)?;?)/g;
+            deobfResult = deobfResult.replace(regexMethod2_Part1, "\n-- [Mora Decoded Method Block]\n$1\n");
+
+            const regexMethod2_Part2 = /([a-zA-Z0-9_]+\s*=\s*\(?function\s*\([^,]+,\s*[^)]+\)[\s\S]*?\]\s*\)?;?)/g;
+            deobfResult = deobfResult.replace(regexMethod2_Part2, "\n-- [Mora Decoded Assignment Block]\n$1\n");
+
+            // Làm sạch toàn bộ các chuỗi junk code nhiễu bộ nhớ RAM
+            deobfResult = deobfResult.replace(/@#\$\^\$198Akhsbk/g, "-- [Cleaned Memory Junk]");
+            deobfResult = deobfResult.replace(/\\035\\001\\198\\232\\000\\102\\035/g, "");
+
+            document.getElementById('outputScript').value = `--[[ This file was decompiled & cleaned by Mora ]]\n` + deobfResult;
+        }
+    }
+
+    // Copy bộ nhớ tạm
+    function copyToClipboard() {
+        const output = document.getElementById('outputScript');
+        if (!output.value) return alert('Chưa có mã nguồn để sao chép!');
+        output.select();
+        document.execCommand('copy');
+        alert('Đã copy dữ liệu xử lý!');
+    }
+
+    // Tải tệp tin tự sinh số ngẫu nhiên từ 1 - 10
+    function downloadFile() {
+        const outputText = document.getElementById('outputScript').value;
+        if (!outputText) return alert('Hãy xử lý thuật toán trước khi tải file!');
+        const randomNumber = Math.floor(Math.random() * 10) + 1;
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(new Blob([outputText], { type: "text/plain;charset=utf-8" }));
+        link.download = `MoraLuLa${randomNumber}.txt.lua`;
+        link.click();
+    }
+</script>
+</body>
+</html>
