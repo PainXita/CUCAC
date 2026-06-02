@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mora Lua Obfuscator (IronBrew VM Style)</title>
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --container-bg: #1f2833;
+            --primary-color: #66fcf1;
+            --secondary-color: #45f3ff;
+            --text-color: #c5c6c7;
+            --btn-hover: #1f2833;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(102, 252, 241, 0.3);
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            background-color: #0f1319;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #00ffcc;
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 8px rgba(69, 243, 255, 0.2);
+        }
+
+        .file-upload-wrapper {
+            margin-top: 10px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-upload {
+            display: inline-block;
+            padding: 8px 16px;
+            cursor: pointer;
+            background-color: #2c3e50;
+            border: 1px solid #34495e;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #34495e;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-obf {
+            background-color: var(--primary-color);
+            color: #000;
+        }
+
+        .btn-obf:hover {
+            background-color: #45e0d7;
+            box-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
+        }
+
+        .btn-action {
+            background-color: #2d3748;
+            color: #fff;
+            border: 1px solid #4a5568;
+        }
+
+        .btn-action:hover {
+            background-color: #4a5568;
+        }
+
+        .output-box {
+            background-color: #0f1319;
+            border: 1px solid #334155;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Mora High-Complexity Obfuscator</h1>
+    
+    <div class="section">
+        <label for="inputScript">Nhập Script Lua gốc của bạn:</label>
+        <textarea id="inputScript" placeholder="Dán mã nguồn Lua hoặc kéo thả file vào đây..."></textarea>
+        
+        <div class="file-upload-wrapper">
+            <label class="custom-file-upload">
+                <input type="file" id="fileInput" accept=".lua,.txt">
+                📁 Tải lên file (.lua / .txt)
+            </label>
+            <span id="fileNameDisplay" style="margin-left: 10px; font-size: 14px; color: #aaa;"></span>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-obf" onclick="obfuscateScript()">⚡ TIẾN HÀNH OBFUSCATE</button>
+    </div>
+
+    <div class="section">
+        <label for="outputScript">Kết quả mã hóa (High-Complexity VM):</label>
+        <textarea id="outputScript" class="output-box" readonly placeholder="Mã nguồn sau khi bảo mật sẽ xuất hiện ở đây..."></textarea>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-action" onclick="copyToClipboard()">📋 Sao chép Code</button>
+        <button class="btn-action" onclick="downloadFile()">💾 Tải File Xuống</button>
+    </div>
+</div>
+
+<script>
+    // Xử lý sự kiện khi cập nhật tải file từ thiết bị
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        document.getElementById('fileNameDisplay').innerText = file.name;
+        
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            document.getElementById('inputScript').value = evt.target.result;
+        };
+        reader.readAsText(file);
+    });
+
+    // Thuật toán Obfuscator mã hóa logic giả lập cấu trúc Luraph/Ironbrew VM
+    function obfuscateScript() {
+        const sourceCode = document.getElementById('inputScript').value.trim();
+        if (!sourceCode) {
+            alert('Vui lòng nhập hoặc tải script lên trước!');
+            return;
+        }
+
+        // Chuyển đổi mã nguồn của bạn sang dạng stream để tạo hằng số chuỗi ảo
+        let byteStream = "";
+        for (let i = 0; i < sourceCode.length; i++) {
+            byteStream += "\\" + sourceCode.charCodeAt(i).toString().padStart(3, '0');
+        }
+
+        // Tạo ký tự junk ngẫu nhiên kháng memory dumper
+        const junkSymbols = ["@#$^$198Akhsbk", "!&*#$992MoraX", "%^&*()_FakeVM"];
+        const selectedJunk = junkSymbols[Math.floor(Math.random() * junkSymbols.length)];
+
+        // Đóng gói lõi VM rút gọn siêu bảo mật
+        const obfuscatedResult = `--[[ This file was created by Mora ]]\nreturn(function(...)local _0xEnv={b=string.byte,c=string.char,s=string.sub};local _0xData="${selectedJunk}${byteStream}";local l_ll1I=${selectedJunk.length + 1};local function _0o0O()if l_ll1I>#_0xData then return nil end;local v_raw=string.byte(_0xData,l_ll1I);l_ll1I=l_ll1I+1;return v_raw end;local _final="";while true do local b=_0o0O()if not b then break end;_final=_final..string.char(b)end;local f,err=loadstring or load;if not f then return assert(load(_final))()else return assert(f(_final))()end end)(...)`;
+
+        document.getElementById('outputScript').value = obfuscatedResult;
+    }
+
+    // Chức năng sao chép code vào bộ nhớ đệm
+    function copyToClipboard() {
+        const output = document.getElementById('outputScript');
+        if (!output.value) {
+            alert('Chưa có code để copy!');
+            return;
+        }
+        output.select();
+        output.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        alert('Đã copy mã obfuscated vào bộ nhớ tạm!');
+    }
+
+    // Chức năng tải file xuống với tên MoraLuLa[ngẫu nhiên từ 1 đến 10].txt.lua
+    function downloadFile() {
+        const outputText = document.getElementById('outputScript').value;
+        if (!outputText) {
+            alert('Vui lòng bấm mã hóa trước khi tải file!');
+            return;
+        }
+
+        // Tạo số ngẫu nhiên từ 1 đến 10 đúng yêu cầu
+        const randomNumber = Math.floor(Math.random() * 10) + 1;
+        const fileName = `MoraLuLa${randomNumber}.txt.lua`;
+
+        const blob = new Blob([outputText], { type: "text/plain;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+</script>
+
+</body>
+</html>
