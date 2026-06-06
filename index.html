@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lua Obfuscator Pro - By Mora | 1 Click Obf + Watermark</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(135deg, #0a0f1a, #03050a);
+            font-family: 'Segoe UI', 'Fira Code', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(10, 20, 35, 0.95);
+            backdrop-filter: blur(3px);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            border: 1px solid #2d3e6e;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        }
+        h1 {
+            margin: 0 0 5px;
+            font-size: 2rem;
+            color: #c084fc;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        h1 small {
+            font-size: 0.7rem;
+            background: #1e293b;
+            padding: 4px 12px;
+            border-radius: 30px;
+            color: #94a3b8;
+        }
+        .sub {
+            color: #94a3b8;
+            border-left: 3px solid #a855f7;
+            padding-left: 15px;
+            margin-bottom: 25px;
+        }
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .panel {
+            flex: 1;
+            background: #0f172ad9;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            border: 1px solid #2d3a5e;
+        }
+        .panel h3 {
+            margin-top: 0;
+            color: #cbd5e6;
+        }
+        textarea {
+            width: 100%;
+            height: 320px;
+            background: #010409;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+            border-radius: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            padding: 12px;
+            resize: vertical;
+        }
+        textarea:focus {
+            border-color: #a855f7;
+            outline: none;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 16px 0 12px;
+            align-items: center;
+        }
+        select, button {
+            background: #1e293b;
+            border: 1px solid #475569;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        button.primary {
+            background: #7c3aed;
+            border-color: #a855f7;
+        }
+        button.primary:hover {
+            background: #6d28d9;
+            transform: scale(0.98);
+        }
+        button.success {
+            background: #10b981;
+            border-color: #34d399;
+        }
+        .status {
+            margin-top: 12px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: #0a0f1c;
+            font-size: 0.85rem;
+        }
+        .success {
+            color: #4ade80;
+            border-left: 4px solid #4ade80;
+        }
+        .error {
+            color: #f87171;
+            border-left: 4px solid #ef4444;
+        }
+        .info {
+            color: #60a5fa;
+            border-left: 4px solid #3b82f6;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            border-top: 1px solid #1e2a3a;
+            padding-top: 15px;
+        }
+        .badge {
+            background: #2d1b4e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        .watermark-preview {
+            background: #2d1b4e40;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-family: monospace;
+            color: #c084fc;
+            margin-top: 10px;
+            border: 1px dashed #7e22ce;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔮 Lua Obfuscator Pro <small>by Mora</small></h1>
+    <div class="sub">
+        ⚡ <strong>1 nút bấm duy nhất</strong> – Tự động làm mờ code Lua + thêm watermark bản quyền
+    </div>
+
+    <div class="grid">
+        <!-- INPUT PANEL -->
+        <div class="panel">
+            <h3>📥 Mã nguồn Lua gốc</h3>
+            <textarea id="inputCode" placeholder="-- Nhập code Lua của bạn ở đây...&#10;local function hello(name)&#10;    print('Hello ' .. name)&#10;end&#10;hello('Mora')">-- Script by NguyenVanA
+local function calculateSum(a, b)
+    local result = a + b
+    print("Sum = " .. result)
+    return result
+end
+
+-- Created by Teo
+calculateSum(10, 32)</textarea>
+            
+            <div class="controls">
+                <select id="obfLevel">
+                    <option value="light">🌿 Nhẹ (Light) – đổi tên biến</option>
+                    <option value="medium" selected>🔥 Trung bình (Medium) – + code rác + xáo số</option>
+                    <option value="heavy">💀 Nặng (Heavy) – full obf + encode chuỗi</option>
+                </select>
+                <button id="obfuscateBtn" class="primary">✨ Obfuscate + Thêm Watermark</button>
+            </div>
+            
+            <div class="watermark-preview">
+                📝 <strong>Watermark tự động thêm:</strong><br>
+                --[[ This file was obfuscated by Mora [TikTok:skibiditoiletsite] ]]<br>
+                (và xóa mọi dòng by/credit cũ)
+            </div>
+        </div>
+
+        <!-- OUTPUT PANEL -->
+        <div class="panel">
+            <h3>📦 Kết quả (đã obf + watermark)</h3>
+            <textarea id="outputCode" readonly placeholder="Code sau khi obfuscated sẽ hiện ở đây..."></textarea>
+            <div class="controls">
+                <button id="copyBtn" class="success">📋 Sao chép kết quả</button>
+                <button id="clearBtn">🗑️ Xóa tất cả</button>
+            </div>
+            <div id="statusMsg" class="status"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        🔥 <strong>Công nghệ:</strong> AST Transformer ảo – Đổi tên biến local, tham số hàm, thêm dead code, xáo trộn số, encode chuỗi (heavy mode).<br>
+        ✅ Mọi dòng <kbd>by ...</kbd>, <kbd>credit ...</kbd>, <kbd>author ...</kbd> đều bị xóa và thay bằng watermark Mora.
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- OBFUSCATION ENGINE ----------
+        let usedNames = new Set();
+        const charPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+        
+        function resetNames() { usedNames.clear(); }
+        
+        function generateMangledName() {
+            let len = 5 + Math.floor(Math.random() * 6);
+            let name = '';
+            for (let i = 0; i < len; i++) {
+                name += charPool[Math.floor(Math.random() * charPool.length)];
+            }
+            if (Math.random() > 0.5) name = '_' + name;
+            if (usedNames.has(name)) return generateMangledName();
+            usedNames.add(name);
+            return name;
+        }
+
+        // Light obf: đổi tên local variables và parameters
+        function lightObfuscate(src) {
+            resetNames();
+            let localVars = new Set();
+            
+            // Tìm local declarations
+            const localDeclRegex = /\blocal\s+([a-zA-Z_][a-zA-Z0-9_]*)(?:\s*,\s*([a-zA-Z_][a-zA-Z0-9_]*))*\b/g;
+            let match;
+            while ((match = localDeclRegex.exec(src)) !== null) {
+                for (let i = 1; i < match.length; i++) {
+                    if (match[i]) localVars.add(match[i]);
+                }
+            }
+            
+            // Tìm tham số function
+            const paramRegex = /function\s+([a-zA-Z_][a-zA-Z0-9_]*)?\s*\(([^)]*)\)|local\s+function\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\(([^)]*)\)/g;
+            let pm;
+            while ((pm = paramRegex.exec(src)) !== null) {
+                let paramsStr = pm[2] || pm[4];
+                if (paramsStr) {
+                    let params = paramsStr.split(/\s*,\s*/);
+                    for (let p of params) {
+                        if (p && /[a-zA-Z_][a-zA-Z0-9_]*/.test(p)) localVars.add(p);
+                    }
+                }
+            }
+            
+            // Tạo mapping đổi tên
+            let renameMap = new Map();
+            for (let v of localVars) {
+                if (!renameMap.has(v)) renameMap.set(v, generateMangledName());
+            }
+            
+            // Thay thế
+            let result = src;
+            for (let [oldName, newName] of renameMap) {
+                let regex = new RegExp(`\\b${oldName}\\b`, 'g');
+                result = result.replace(regex, newName);
+            }
+            return result;
+        }
+
+        // Thêm dead code
+        function insertDeadCode(src, level) {
+            if (level === 'light') return src;
+            
+            let lines = src.split('\n');
+            let newLines = [];
+            const junkMedium = [
+                "local _dead = 42",
+                "if (true) then local _x = 1 + 2 end",
+                "do local _unused = \"obf\" end",
+                "local _noop = function() return 0 end; _noop()"
+            ];
+            const junkHeavy = [
+                "do local __d = math.random(1,100) end",
+                "local _ = function(x) return x*x end; _(10)",
+                "for _=1,1 do local __ = 0 end"
+            ];
+            
+            for (let i = 0; i < lines.length; i++) {
+                newLines.push(lines[i]);
+                if (level === 'medium' && Math.random() > 0.75 && lines[i].trim().length > 0) {
+                    let junk = junkMedium[Math.floor(Math.random() * junkMedium.length)];
+                    newLines.push("    " + junk + " -- [dead]");
+                }
+                if (level === 'heavy' && Math.random() > 0.5) {
+                    let junk = junkHeavy[Math.floor(Math.random() * junkHeavy.length)];
+                    newLines.push("    " + junk);
+                }
+            }
+            return newLines.join('\n');
+        }
+
+        // Xáo trộn số
+        function obscureNumbers(src, level) {
+            if (level === 'light') return src;
+            
+            return src.replace(/\b(\d+)\b/g, (match, numStr) => {
+                let num = parseInt(numStr, 10);
+                if (num < 2 || num > 2000) return match;
+                if (Math.random() > 0.6) return match;
+                
+                let techniques = [
+                    `(${num}+0)`,
+                    `(${Math.floor(num/2)}*2)`,
+                    `(0x${num.toString(16)})`,
+                    `(${num+1}-1)`
+                ];
+                if (level === 'heavy') {
+                    techniques.push(`math.floor(${num}.0)`, `(0+${num})`);
+                }
+                return techniques[Math.floor(Math.random() * techniques.length)];
+            });
+        }
+
+        // Encode chuỗi (heavy mode)
+        function encodeStrings(src, heavy) {
+            if (!heavy) return src;
+            
+            return src.replace(/(["'])((?:(?!\1).)*?)\1/g, (full, quote, content) => {
+                if (content.length > 1 && content.length < 30 && !content.includes('"')) {
+                    let bytes = [];
+                    for (let i = 0; i < content.length; i++) {
+                        bytes.push(content.charCodeAt(i));
+                    }
+                    return `string.char(${bytes.join(',')})`;
+                }
+                return full;
+            });
+        }
+
+        // Xóa credit cũ + thêm watermark mới
+        const WATERMARK = "--[[ This file was obfuscated by Mora [TikTok:skibiditoiletsite] ]]\n";
+        
+        function replaceCredits(code) {
+            let result = code;
+            
+            // Xóa tất cả dòng credit cũ
+            result = result.replace(/--[ \t]*[bB][yY][ \t]+[^\n]*(?:\n|$)/g, '');
+            result = result.replace(/--[ \t]*[cC]redit[ \t]+[^\n]*(?:\n|$)/g, '');
+            result = result.replace(/--[ \t]*[aA]uthor[ \t]+[^\n]*(?:\n|$)/g, '');
+            result = result.replace(/--[ \t]*made[ \t]+[bB][yY][ \t]+[^\n]*(?:\n|$)/g, '');
+            result = result.replace(/--[ \t]*[Oo]bfuscated[ \t]+[bB][yY][ \t]+[^\n]*(?:\n|$)/g, '');
+            result = result.replace(/^[ \t]*[bB][yY][ \t]+[a-zA-Z0-9_\-\.\s]{1,40}[ \t]*(\n|$)/gm, '');
+            
+            // Dọn dòng trống thừa
+            result = result.replace(/^[ \t]*\n/gm, '');
+            
+            // Thêm watermark vào đầu
+            result = WATERMARK + result;
+            
+            return result;
+        }
+
+        // Full obfuscate pipeline
+        function fullObfuscate(src, level) {
+            let step1 = lightObfuscate(src);
+            let step2 = insertDeadCode(step1, level);
+            let step3 = obscureNumbers(step2, level);
+            let step4 = encodeStrings(step3, level === 'heavy');
+            
+            if (level === 'heavy') {
+                step4 = "--[======[ HEAVY OBFUSCATED ]======]\n" + step4 + "\n--[====[ END OBF ]====]";
+            } else if (level === 'medium') {
+                step4 = "--[ MEDIUM OBFUSCATED ]\n" + step4;
+            }
+            
+            return step4;
+        }
+
+        // Main button handler
+        function obfuscateAndWatermark() {
+            const input = document.getElementById('inputCode').value;
+            const level = document.getElementById('obfLevel').value;
+            const outputArea = document.getElementById('outputCode');
+            const statusDiv = document.getElementById('statusMsg');
+            
+            if (!input.trim()) {
+                statusDiv.innerHTML = '⚠️ Vui lòng nhập code Lua cần làm mờ!';
+                statusDiv.className = 'status error';
+                return;
+            }
+            
+            try {
+                let obfuscated;
+                if (level === 'light') {
+                    obfuscated = lightObfuscate(input);
+                    obfuscated = obscureNumbers(obfuscated, 'light');
+                } else {
+                    obfuscated = fullObfuscate(input, level);
+                }
+                
+                // Thay thế credit thành watermark
+                let finalCode = replaceCredits(obfuscated);
+                
+                outputArea.value = finalCode;
+                statusDiv.innerHTML = `✅ Obfuscate thành công (${level})! Đã xóa credit cũ và thêm watermark Mora.`;
+                statusDiv.className = 'status success';
+            } catch (err) {
+                statusDiv.innerHTML = `❌ Lỗi: ${err.message}`;
+                statusDiv.className = 'status error';
+                outputArea.value = '';
+            }
+        }
+        
+        function copyOutput() {
+            const output = document.getElementById('outputCode');
+            if (!output.value.trim()) {
+                alert('Không có code để sao chép! Hãy obfuscate trước.');
+                return;
+            }
+            output.select();
+            document.execCommand('copy');
+            const statusDiv = document.getElementById('statusMsg');
+            statusDiv.innerHTML = '📋 Đã sao chép kết quả vào clipboard!';
+            statusDiv.className = 'status success';
+            setTimeout(() => {
+                if (statusDiv.innerHTML.includes('Đã sao chép')) {
+                    statusDiv.innerHTML = '✅ Obfuscate thành công! Đã thêm watermark Mora.';
+                    statusDiv.className = 'status success';
+                }
+            }, 2000);
+        }
+        
+        function clearAll() {
+            document.getElementById('inputCode').value = '';
+            document.getElementById('outputCode').value = '';
+            const statusDiv = document.getElementById('statusMsg');
+            statusDiv.innerHTML = '🗑️ Đã xóa sạch. Nhập code mới để obfuscate.';
+            statusDiv.className = 'status info';
+        }
+        
+        // Gán sự kiện
+        document.getElementById('obfuscateBtn').addEventListener('click', obfuscateAndWatermark);
+        document.getElementById('copyBtn').addEventListener('click', copyOutput);
+        document.getElementById('clearBtn').addEventListener('click', clearAll);
+        
+        // Mặc định chạy mẫu
+        window.addEventListener('load', () => {
+            document.getElementById('statusMsg').innerHTML = '✅ Sẵn sàng! Nhập code Lua và bấm "Obfuscate + Thêm Watermark"';
+            document.getElementById('statusMsg').className = 'status info';
+        });
+    })();
+</script>
+</body>
+</html>
